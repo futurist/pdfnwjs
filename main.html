@@ -27,6 +27,9 @@
 		    vertical-align: middle;
 		    text-align: center;
         }
+        .qrcode{
+        	display: none;
+        }
         .qrcode img{
         	margin-top:30px;
         }
@@ -38,7 +41,7 @@
 	<div class="loadInfo">
 		<div class="loading">加载中...</div>
 		<div class="qrcode">
-			检测到未登录或系统环境发生变化，请使用微信扫码登录。
+			<p>检测到未登录或系统环境发生变化，请使用微信扫码登录。</p>
 			<img src="">
 		</div>
 	</div>
@@ -47,6 +50,7 @@
 
 <script type="text/javascript" src="js/zepto.js"></script>
 <script type="text/javascript" src="js/fingerprint2.min.js"></script>
+<script type="text/javascript" src="js/reconnecting-websocket.js"></script>
 <script type="text/javascript" src="js/ws.js"></script>
 <script type="text/javascript">
 
@@ -56,12 +60,26 @@ var host = "http://1111hui.com:88";
 
 // init login data
 
-new Fingerprint2().get(function(result){
-  $.post( host+'/getFinger', {finger:result}, function(data){
-  	$('.loading').hide();
-  	$('.qrcode img').attr('src', data );
-  });
+ws.addEventListener('open', function(){
+	console.log('ws opened init function');
+	getFinger();
 });
+
+
+function getFinger(){
+	new Fingerprint2().get(function(result){
+		var msgid = wsend( {finger:result}, this, function(data){
+			console.log('ws:', data);
+		});
+
+	  $.post( host+'/getFinger', {finger:result, msgid:msgid}, function(data){
+	  	$('.loading').hide();
+	  	$('.qrcode img').attr('src', data );
+	  	$('.qrcode').show();
+	  });
+	});
+}
+
 
 // some init data & number
 var TaskBarHeight = 30;
