@@ -1,14 +1,14 @@
 {
     "description": "A very small code editor.",
     "main": "main.html",
-    "name": "无纸办公系统",
+    "name": "移动办公系统",
     "version": "1.0",
     "node-remote": ["1111hui.com", "1111hui.com:88"],
     "window": {
         "height": 600,
         "width": 400,
         "show": false,
-        "title": "无纸办公系统",
+        "title": "移动办公系统",
         "toolbar": true,
         "icon": "icon.png"
     }

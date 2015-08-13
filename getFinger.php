@@ -2,7 +2,15 @@
 <HTML>
 <HEAD>
 <meta charset="utf-8">
-<TITLE>获取用户信息中</TITLE>
+<TITLE>客户端登录</TITLE>
+<meta name="apple-touch-fullscreen" content="yes"/>
+<meta name="format-detection" content="telephone=no"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, maximum-scale=1, minimum-scale=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+<meta http-equiv="cache-control" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
+
 <script type="text/javascript" src="/js/cookies.js"></script>
 </HEAD>
 <BODY>
@@ -13,20 +21,22 @@
 	header('Access-Control-Allow-Headers: Content-Type, Accept, X-Requested-With, X-File-Name, Cache-Control');
 	header('Access-Control-Allow-Methods: GET,POST,HEAD');
 	$code = $_GET['code'];
-	$state = $_GET['state'];
+	$msgid = $_GET['state'];
 
-	$content=file_get_contents('http://1111hui.com:88/getUserID?code='.$code.'&state=0');
+	$content=file_get_contents('http://1111hui.com:88/putFingerInfo?code='.$code.'&msgid='.$msgid);
+	echo $content;
 ?>
+
+<div id="result"></div>
+
 <script type="text/javascript">
 
 var data = '<?php echo $content ?>';
-var state = '<?php echo $state ?>';
-
-if(!state) Cookies.expire('wxUserInfo');
-else Cookies.set('wxUserInfo', data, {expires:600});
-
-if(data && state) window.location = state.replace('{@@@}', '#');
+var msgid = '<?php echo $msgid ?>';
+document.querySelector('#result').innerHTML = '客户端登录成功';
 
 </script>
+
+
 </BODY>
 </HTML>
