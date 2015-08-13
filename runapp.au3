@@ -10,7 +10,7 @@ for $i=1 to $aFileList[0]
 
    ;MsgBox($MB_SYSTEMMODAL, "", "You have the following windows open:" & $file & $a )
 
-   if StringRegExp($file, "(?i)\.au3$|\.nw$|bower_components|node_modules")==1  then
+   if StringRegExp($file, "(?i)\.au3$|\.nw$|\.git|bower_components|node_modules")==1  then
 	  ContinueLoop
    EndIf
 
@@ -30,6 +30,7 @@ if $ret<>0 Then
 EndIf
 
 FileMove("app.zip", "app.nw", $FC_OVERWRITE)
+; Local $ret = RunWait("cmd /c ""copy /b d:\nwjs\nw.exe+app.nw app.exe""")
 
 Sleep(100)
 

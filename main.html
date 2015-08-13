@@ -11,69 +11,70 @@
         html, body{
             height: 100%;
         }
+        body{
+        	background-color:#eee;
+        	color:#333;
+        	font:12px/1 Arial;
+        }
         .info{
-            margin: 100px auto;
+            width:100%;
+            height: 100%;
+            display: table;
+        }
+        .loadInfo{
+        	display: table-cell;
+		    width: 100%;
+		    vertical-align: middle;
+		    text-align: center;
+        }
+        .qrcode img{
+        	margin-top:30px;
         }
         </style>
     </head>
  
 <body style="-webkit-app-region: drag">
-        <div id="editor" style=" width: 100px; -webkit-transform: rotate(-30deg); -webkit-transform-origin: right bottom;">iowjaegoiajwoejfo</div>
-        <div class="info">
-            <span id="editMode" class="statuslineitem">Normal</span>
-            <span class="title statuslineitem">
-            <span class="arrow-right-editMode statuslineitem"></span>
-            <span id="title">No file</span>
-            </span>
-            <span class="mode statuslineitem">
-                <span class="arrow-right-title statuslineitem"></span>
-            <span id="mode">JavaScript</span>
-            </span>
-            <span class="linenum statuslineitem">
-                <span class="arrow-right-mode statuslineitem"></span>
-            <span id="linenum">1</span>
-            </span>
-            <span class="colnum statuslineitem">
-                <span class="arrow-right-linenum statuslineitem"></span>
-            <span id="colnum">1</span>
-            </span>
-            <span class="arrow-right-colnum statuslineitem"></span>
-        </div>
- 
-        <input style="display:block;" id="openFile" type="file" />
-        <input style="display:block;" id="saveFile" type="file" />
-
+<div class="info">
+	<div class="loadInfo">
+		<div class="loading">加载中...</div>
+		<div class="qrcode">
+			检测到未登录或系统环境发生变化，请使用微信扫码登录。
+			<img src="">
+		</div>
+	</div>
+</div>
 <iframe id="main" style="display:none; position:fixed; top:0; left:0; width:100%;height:100%;border:none;outline:none" src=""></iframe>
 
+<script type="text/javascript" src="js/zepto.js"></script>
 <script type="text/javascript" src="js/fingerprint2.min.js"></script>
+<script type="text/javascript" src="js/ws.js"></script>
 <script type="text/javascript">
 
 var url = "http://1111hui.com/pdf/client/tree.html";
+var host = "http://1111hui.com:88";
+
+
+// init login data
 
 new Fingerprint2().get(function(result){
-  alert(result);
+  $.post( host+'/getFinger', {finger:result}, function(data){
+  	$('.loading').hide();
+  	$('.qrcode img').attr('src', data );
+  });
 });
 
+// some init data & number
 var TaskBarHeight = 30;
-
 var POP_WIDTH=300, POP_HEIGHT=300;
+
+// global var 
+var isShow = true;
+var tray;	//system tray var
+var win;	//main window var
 
 var gui = require('nw.gui');
 
-var win = gui.Window.get();
-
-win.setPosition('center');
-win.on('close', function() {
-  this.hide(); // Pretend to be closed already
-  isShow = false;
-});
-
-win.moveTo( Math.round(screen.width-window.outerWidth-40), Math.round(screen.height/2-window.outerHeight/2-TaskBarHeight-10) );
-showWin(true);
-
-
-
-var isShow = true;
+// show/hide main window
 function showWin(toShow){
 	if(typeof toShow=='undefined'){
 		toShow = !isShow;
@@ -89,8 +90,20 @@ function showWin(toShow){
 
 }
 
-var tray;
 function init(){
+
+	// init main window
+	win = gui.Window.get();
+	win.setPosition('center');
+	win.on('close', function() {
+	  this.hide(); // Pretend to be closed already
+	  isShow = false;
+	});
+
+	win.moveTo( Math.round(screen.width-window.outerWidth-40), Math.round(screen.height/2-window.outerHeight/2-TaskBarHeight-10) );
+	showWin(true);
+
+	// init system Tray
 	tray = new gui.Tray({ title: 'Tray', icon: 'img/icon.png' });
 	// Give it a menu
 	var menu = new gui.Menu();
@@ -117,13 +130,14 @@ function init(){
 init();
 
 
-var pop = gui.Window.open('http://baidu.com',{toolbar:false,frame:false,width:POP_WIDTH, height:POP_HEIGHT});
-pop.setShowInTaskbar(false);
-pop.resizeTo(POP_WIDTH,POP_HEIGHT);
-pop.moveTo( screen.width-POP_WIDTH-20, screen.height-POP_HEIGHT-TaskBarHeight-10 );
-pop.setAlwaysOnTop(true);
-pop.setResizable(false);
-
+function showPop(){
+	var pop = gui.Window.open('http://baidu.com',{toolbar:false,frame:false,width:POP_WIDTH, height:POP_HEIGHT});
+	pop.setShowInTaskbar(false);
+	pop.resizeTo(POP_WIDTH,POP_HEIGHT);
+	pop.moveTo( screen.width-POP_WIDTH-20, screen.height-POP_HEIGHT-TaskBarHeight-10 );
+	pop.setAlwaysOnTop(true);
+	pop.setResizable(false);
+}
 
 
         </script>
