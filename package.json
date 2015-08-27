@@ -1,9 +1,9 @@
 {
-    "description": "A very small code editor.",
+    "description": "移动办公系统",
     "main": "main.html",
+    "node-remote": "http://1111hui.com",
     "name": "移动办公系统",
     "version": "1.0",
-    "node-remote": ["1111hui.com", "1111hui.com:88"],
     "window": {
         "height": 600,
         "width": 400,
