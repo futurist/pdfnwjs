@@ -1,15 +1,18 @@
 {
-    "description": "移动办公系统",
-    "main": "main.html",
-    "node-remote": "http://1111hui.com",
-    "name": "移动办公系统",
-    "version": "1.0",
-    "window": {
-        "height": 600,
-        "width": 400,
-        "show": false,
-        "title": "移动办公系统",
-        "toolbar": true,
-        "icon": "icon.png"
-    }
+  "name": "GoOfficeSystem",
+  "version": "0.1.0",
+  "description": "GoOfficeSystem",
+  "main": "main.html",
+  "node-remote": "http://1111hui.com",
+  "window": {
+    "height": 600,
+    "width": 400,
+    "show": false,
+    "title": "移动办公系统",
+    "toolbar": true,
+    "icon": "icon.png"
+  },
+  "dependencies": {
+    "nw-notify": "^0.2.0"
+  }
 }

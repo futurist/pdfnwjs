@@ -2,8 +2,9 @@
 
 
 var gui = require('nw.gui');
+var nwNotify = require('nw-notify');
 
-var mainNW = (function(gui) {
+var nwMain = (function(gui) {
 
 	// some init data & number
 	var TaskBarHeight = 30;
@@ -35,13 +36,15 @@ var mainNW = (function(gui) {
 
 		// init main window
 		win = gui.Window.get();
-		win.setPosition('center');
+		//win.setPosition('center');
 		win.on('close', function() {
 		  this.hide(); // Pretend to be closed already
 		  isShow = false;
 		});
 
-		win.moveTo( Math.round(screen.width-window.outerWidth-40), Math.round(screen.height/2-window.outerHeight/2-TaskBarHeight-10) );
+		if(!document.referrer){
+			win.moveTo( Math.round(screen.width-window.outerWidth-40), Math.round(screen.height/2-window.outerHeight/2-TaskBarHeight-10) );
+		}
 		showWin(true);
 
 		// init system _Tray
@@ -66,6 +69,17 @@ var mainNW = (function(gui) {
 		_tray.on('click', function(e){
 			showWin();
 		});
+
+
+		nwNotify.setConfig({
+		    appIcon: nwNotify.getAppPath() + 'images/icon.png',
+		    displayTime: 6000
+		});
+		// If you want to use your own notification.html you use this method. Use it like this: 
+		nwNotify.setTemplatePath(nwNotify.getAppPath() + 'notification.html');
+
+		global.mainWindow = win;
+
 	}
 
 
