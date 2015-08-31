@@ -1,10 +1,14 @@
 
 
-
 var gui = require('nw.gui');
 var nwNotify = require('nw-notify');
+// Change nw-notify: index.js file as below:
+// 153: config.lowerRightCorner.y = cur_screen.bounds.y + cur_screen.work_area.y + cur_screen.work_area.height - 10;
+// 272: if(config.displayTime>0)...
 
 var nwMain = (function(gui) {
+
+	if(global.nwMain) return;
 
 	// some init data & number
 	var TaskBarHeight = 30;
@@ -72,37 +76,106 @@ var nwMain = (function(gui) {
 
 
 		nwNotify.setConfig({
-		    appIcon: nwNotify.getAppPath() + 'images/icon.png',
-		    displayTime: 6000
+		    //appIcon: nwNotify.getAppPath() + 'images/icon.png',
+		    displayTime: 0,
+
+			width: 300,
+			height: 65,
+			padding: 10,
+			borderRadius: 5,
+
+			defaultStyleContainer: {
+				backgroundColor: '#f0f0f0',
+				overflow: 'hidden',
+				padding: '8px',
+				border: '1px solid #CCC',
+				fontFamily: 'Arial',
+				fontSize: '12px',
+				position: 'relative',
+				lineHeight: '15px',
+				padding: '10px 4px 10px 10px'
+			},
+			defaultStyleAppIcon: {
+				overflow: 'hidden',
+				float: 'left',
+				height: '40px',
+				width: '40px',
+				marginRight: '10px',
+			},
+			defaultStyleImage: {
+				overflow: 'hidden',
+				float: 'right',
+				height: '40px',
+				width: '40px',
+				marginLeft: '10px',
+			},
+			defaultStyleClose: {
+				position: 'absolute',
+				top: '1px',
+				right: '3px',
+				fontSize: '11px',
+				color: '#111',
+				cursor:'pointer'
+			},
+			defaultStyleText: {
+				margin: 0,
+				overflow: 'hidden',
+				cursor: 'default'
+			},
+			defaultWindow: {
+				'always-on-top': true,
+				'visible-on-all-workspaces': true,
+				'show_in_taskbar': process.platform == "darwin",
+				show: false,
+				frame: false,
+				transparent: true,
+				toolbar: false
+			}
+
+
 		});
 		// If you want to use your own notification.html you use this method. Use it like this: 
 		nwNotify.setTemplatePath(nwNotify.getAppPath() + 'notification.html');
 
-		global.mainWindow = win;
 
 	}
 
 
 
-	function showPop(){
-		var pop = gui.Window.open('http://baidu.com',{toolbar:false,frame:false,width:POP_WIDTH, height:POP_HEIGHT});
+	function showPop(url){
+		var pop = gui.Window.open(url, {toolbar:false,frame:false,width:POP_WIDTH, height:POP_HEIGHT});
 		pop.setShowInTaskbar(false);
 		pop.resizeTo(POP_WIDTH,POP_HEIGHT);
 		pop.moveTo( screen.width-POP_WIDTH-20, screen.height-POP_HEIGHT-TaskBarHeight-10 );
 		pop.setAlwaysOnTop(true);
 		pop.setResizable(false);
+		return pop;
 	}
 
-	initNW();
-	this.mainWin = win;
-	this.tray = _tray;
-	this.initNW = initNW;
-	this.showPop = showPop;
-	this.showWin = showWin;
+	function showReader(url){
+		var pop = gui.Window.open(url, {position:'center', toolbar:true,frame:true,width:Math.max(screen.width*.8, 790), height:Math.max(screen.height*.8, 790)});
+		pop.setShowInTaskbar(true);
+		pop.setAlwaysOnTop(false);
+		pop.setResizable(true);
+		return pop;
+	}
 
-	return this;
+
+
+	initNW();
+
+	var exports = {};
+	exports.mainWin = win;
+	exports.tray = _tray;
+	exports.initNW = initNW;
+	exports.showPop = showPop;
+	exports.showWin = showWin;
+	exports.showReader = showReader;
+
+	return exports;
 })(gui);
 
+global.NWMain = nwMain;
 
 
 
