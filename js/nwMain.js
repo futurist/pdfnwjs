@@ -46,6 +46,13 @@ var nwMain = (function(gui) {
 		  isShow = false;
 		});
 
+		win.on('new-win-policy', function(frame, url, policy) {
+			alert(url);
+		  window.console.log(frame, url, policy);
+		});
+
+
+
 		if(!document.referrer){
 			win.moveTo( Math.round(screen.width-window.outerWidth-40), Math.round(screen.height/2-window.outerHeight/2-TaskBarHeight-10) );
 		}
@@ -160,7 +167,17 @@ var nwMain = (function(gui) {
 		return pop;
 	}
 
-
+	// findWindow by url
+	function findWindowByUrl (url) {
+		var win;
+		var list = global.__nwWindowsStore;
+		list.forEach(function findInList (v) {
+			if(v.window.location.href == url){
+				win = v;
+			}
+		});
+		return win;
+	}
 
 	initNW();
 
