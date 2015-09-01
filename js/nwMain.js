@@ -5,10 +5,11 @@ var nwNotify = require('nw-notify');
 // Change nw-notify: index.js file as below:
 // 153: config.lowerRightCorner.y = cur_screen.bounds.y + cur_screen.work_area.y + cur_screen.work_area.height - 10;
 // 272: if(config.displayTime>0)...
+var popupList = global.popupList||{};
 
 var nwMain = (function(gui) {
 
-	if(global.nwMain) return;
+	if( Object.keys(popupList).length || !window.location.href.match(/tree\.html/) ) return;
 
 	// some init data & number
 	var TaskBarHeight = 30;
@@ -47,7 +48,6 @@ var nwMain = (function(gui) {
 		});
 
 		win.on('new-win-policy', function(frame, url, policy) {
-			alert(url);
 		  window.console.log(frame, url, policy);
 		});
 
@@ -159,7 +159,7 @@ var nwMain = (function(gui) {
 		return pop;
 	}
 
-	function showReader(url){
+	function _showReader(url){
 		var pop = gui.Window.open(url, {position:'center', toolbar:true,frame:true,width:Math.max(screen.width*.8, 790), height:Math.max(screen.height*.8, 790)});
 		pop.setShowInTaskbar(true);
 		pop.setAlwaysOnTop(false);
@@ -167,15 +167,63 @@ var nwMain = (function(gui) {
 		return pop;
 	}
 
-	// findWindow by url
+
+	// Reopen previous window when it's the same link
+	function showReader(link, reload){
+
+		var pop = popupList[link];
+
+		if(pop){
+
+			pop.show();
+			pop.focus();
+			if(reload) pop.window.location.reload();
+
+		} else {
+
+			pop = _showReader(link);
+
+			popupList[link] = pop;
+
+			pop.on('closed', function() {
+				var link = findKey(popupList, pop);
+				delete popupList[link];
+			});
+		}
+
+	}
+
+
+	function findKey (obj, val) {
+		for(var i in obj){
+			if(obj[i]==val) return i;
+		}
+	}
+
+
+	function _nwOpenLink (link) {
+		var pop = findWindowByUrl(link);
+
+		if(pop){
+			pop.show();
+			pop.focus();
+			return;
+		} else {
+			pop = nwMain.showReader(link);
+		}
+
+	}
+
+	// findWindow by url, NOT WORK WHEN WINDOW CLOSE IT"S NOT CLEAR !!!!
 	function findWindowByUrl (url) {
 		var win;
 		var list = global.__nwWindowsStore;
-		list.forEach(function findInList (v) {
+		for(var i in list) {
+			var v = list[i];
 			if(v.window.location.href == url){
 				win = v;
 			}
-		});
+		};
 		return win;
 	}
 
@@ -188,11 +236,13 @@ var nwMain = (function(gui) {
 	exports.showPop = showPop;
 	exports.showWin = showWin;
 	exports.showReader = showReader;
+	exports.findWindowByUrl = findWindowByUrl;
+	global._nwMain = exports;
+	global.popupList = popupList;
 
 	return exports;
 })(gui);
 
-global.NWMain = nwMain;
 
 
 
