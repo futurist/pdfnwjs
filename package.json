@@ -2,12 +2,12 @@
   "name": "GoOfficeSystem",
   "version": "0.1.0",
   "description": "GoOfficeSystem",
-  "main": "main.html",
+  "main": "http://1111hui.com/pdf/client/main.html",
   "node-remote": "http://1111hui.com",
   "window": {
     "height": 600,
     "width": 400,
-    "show": false,
+    "show": true,
     "title": "移动办公系统",
     "toolbar": true,
     "icon": "icon.png"

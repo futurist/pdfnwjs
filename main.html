@@ -69,15 +69,21 @@ ws.addEventListener('open', function(){
 
 function getFinger() {
 	new Fingerprint2().get(function(result){
+		//result += +new Date();
 		var msgid = wsend( {finger:result}, this, function(data){
 			console.log('ws:', data);
 			loginSuccess(data);
 		});
 
 	  $.post( host+'/getFinger', {finger:result, msgid:msgid}, function(data){
-	  	$('.loading').hide();
-	  	$('.qrcode img').attr('src', data );
-	  	$('.qrcode').show();
+	  	if(!data.userid){
+	  		$('.loading').hide();
+		  	$('.qrcode img').attr('src', data.qrcode );
+		  	$('.qrcode').show();
+	  	} else {
+	  		loginSuccess(data);
+	  	}
+	  	
 	  });
 	});
 }
@@ -89,7 +95,7 @@ function loginSuccess (data) {
 }
 
 
-loginSuccess()
+// loginSuccess()
 
 
 

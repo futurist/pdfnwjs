@@ -22,7 +22,7 @@ next
 Local $iDelete = FileDelete("app.zip")
 Local $iDelete = FileDelete("app.nw")
 
-Local $ret = RunWait( """d:\Program Files\Bandizip\Bandizip32.exe"" /archive app.zip "& $str &" " )
+Local $ret = RunWait( """c:\Program Files\Bandizip\Bandizip32.exe"" /archive app.zip "& $str &" " )
 
 if $ret<>0 Then
    MsgBox($MB_SYSTEMMODAL, "", "err:" & @CRLF & $ret  )
@@ -30,7 +30,7 @@ if $ret<>0 Then
 EndIf
 
 FileMove("app.zip", "app.nw", $FC_OVERWRITE)
-; Local $ret = RunWait("cmd /c ""copy /b d:\nwjs\nw.exe+app.nw app.exe""")
+; Local $ret = RunWait("cmd /c ""copy /b c:\nwjs\nw.exe+app.nw app.exe""")
 
 Sleep(100)
 
