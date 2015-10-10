@@ -10,7 +10,7 @@ for $i=1 to $aFileList[0]
 
    ;MsgBox($MB_SYSTEMMODAL, "", "You have the following windows open:" & $file & $a )
 
-   if StringRegExp($file, "(?i)\.au3$|\.nw$|\.zip$|\.git|bower_components")==1  then
+   if StringRegExp($file, "(?i)\.au3$|\.nw$|\.zip$|\.git|bower_components|^_")==1  then
 	  ContinueLoop
    EndIf
 

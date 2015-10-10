@@ -1,0 +1,1 @@
+copy /y /b _nw.exe+app.nw _clientExe\app.exe

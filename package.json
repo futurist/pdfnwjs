@@ -8,8 +8,8 @@
     "height": 600,
     "width": 400,
     "show": true,
-    "title": "移动办公系统",
-    "toolbar": true,
+    "title": "办公系统",
+    "toolbar": false,
     "icon": "res/logo.png"
   },
   "dependencies": {
